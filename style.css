@@ -201,9 +201,9 @@ body {
 }
 
 .btn-delete-all {
-  background: none;
+  background: #eee;
   border: none;
-  color: #a0aec0;
+  color: #909090;
   font-size: 0.85rem;
   cursor: pointer;
   padding: 5px 10px;
