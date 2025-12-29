@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App - BSCS ITC Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>&#128203; Todo App</h1>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <h2>&#10133; Add New Task</h2>
+            <div class="input-row">
+                <input type="text" id="taskInput" placeholder="Enter your task..." />
+                <select id="categorySelect">
+                    <option value="study">&#128218; Study</option>
+                    <option value="assignment">&#128221; Assignment</option>
+                    <option value="project">&#128188; Project</option>
+                    <option value="exam">&#128214; Exam Prep</option>
+                    <option value="lab">&#128300; Lab Work</option>
+                    <option value="reading">&#128213; Reading</option>
+                    <option value="other">&#128204; Other</option>
+                </select>
+                <input type="datetime-local" id="deadlineInput" />
+                <button class="btn btn-add" onclick="addTask()">Add Task</button>
+                <button class="btn btn-clear" onclick="clearInputs()">Clear</button>
+            </div>
+        </div>
+
+        <!-- Tasks Container -->
+        <div class="tasks-container">
+            <!-- Active Tasks -->
+            <div class="tasks-section active-section">
+                <div class="section-header">
+                    <h2>&#128293; Active Tasks <span class="count-badge" id="activeCount">0</span></h2>
+                    <button class="btn-delete-all" onclick="deleteAllActive()">Delete All</button>
+                </div>
+                <ul class="task-list" id="activeTasksList">
+                    <li class="empty-state">No active tasks. Add one above!</li>
+                </ul>
+            </div>
+
+            <!-- Completed Tasks -->
+            <div class="tasks-section completed-section">
+                <div class="section-header">
+                    <h2>&#9989; Completed Tasks <span class="count-badge" id="completedCount">0</span></h2>
+                    <button class="btn-delete-all" onclick="deleteAllCompleted()">Delete All</button>
+                </div>
+                <ul class="task-list" id="completedTasksList">
+                    <li class="empty-state">No completed tasks yet.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Made with &#10084;&#65039; for ITC Project</p>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h3>&#9999;&#65039; Edit Task</h3>
+            <input type="text" class="modal-input" id="editTaskInput" placeholder="Task name..." />
+            <select class="modal-input" id="editCategorySelect">
+                <option value="study">&#128218; Study</option>
+                <option value="assignment">&#128221; Assignment</option>
+                <option value="project">&#128188; Project</option>
+                <option value="exam">&#128214; Exam Prep</option>
+                <option value="lab">&#128300; Lab Work</option>
+                <option value="reading">&#128213; Reading</option>
+                <option value="other">&#128204; Other</option>
+            </select>
+            <input type="datetime-local" class="modal-input" id="editDeadlineInput" />
+            <div class="modal-actions">
+                <button class="btn btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button class="btn btn-save" onclick="saveEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
