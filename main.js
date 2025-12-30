@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Add enter key support
   document
     .getElementById("taskInput")
-    .addEventListener("keypress", function (e) {
+    .addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
         addTask();
       }
@@ -46,14 +46,18 @@ function generateId() {
 }
 
 // Check for duplicate task
+//  it is called 2 times , one in addTask function, second in EditTask function
+//  in addTask function --> the task from input is checked from the arrays of objects for an existing task , and at this point the  excludeId= null
+//  in editTask function --> the task is checked and the task id is the editing id that is passed as excludeId and we exclude this by t.id !== excludeId
 function isDuplicateTask(taskText, excludeId = null) {
-  const normalizedText = taskText.toLowerCase().trim();
+  const normalizedText = taskText.toLowerCase();
   return tasks.some(
-    (t) => t.text.toLowerCase().trim() === normalizedText && t.id !== excludeId
+    (t) => t.text.toLowerCase() === normalizedText && t.id !== excludeId
   );
 }
 
 // Add Task
+// the input validation that inputs are not empty || duplication check that no duplicate entries are done
 function addTask() {
   const taskInput = document.getElementById("taskInput");
   const categorySelect = document.getElementById("categorySelect");
@@ -63,12 +67,14 @@ function addTask() {
   const deadline = deadlineInput.value;
 
   // Validate required fields
+  // if the tasktext input value is empty after trimming spaces it will alert the message
   if (!taskText) {
     alert("⚠️ Task name is required! Please enter a task.");
     taskInput.focus();
     return;
   }
 
+  // if the deadline input value is empty after trimming spaces it will alert the message
   if (!deadline) {
     alert("⚠️ Deadline is required! Please select a deadline.");
     deadlineInput.focus();
@@ -86,12 +92,14 @@ function addTask() {
   }
 
   const task = {
-    id: generateId(),
-    text: taskText,
-    category: categorySelect.value,
-    deadline: deadline,
-    completed: false,
+    id: generateId(), // id will generated through function generateId()
+    text: taskText, // taskInput value after trimming starting and ending spaces
+    category: categorySelect.value, // category select value from input section
+    deadline: deadline, // deadline input value from input section
+    completed: false, // all tasks are incompleted at intial.
   };
+
+  console.log(tasks);
 
   tasks.push(task);
   saveTasks();
@@ -210,10 +218,13 @@ function saveEdit() {
     closeEditModal();
   }
 }
-
 // Format Deadline
+// A date string, e.g., "2025-12-30T14:30:00"
+// A JavaScript Date object
+// A timestamp (milliseconds since Jan 1, 1970)
+// Return Value:
+// A formatted string showing the date and time, e.g., "Dec 30, 02:30 PM".
 function formatDeadline(deadline) {
-  if (!deadline) return "";
   const date = new Date(deadline);
   const options = {
     month: "short",
@@ -224,9 +235,9 @@ function formatDeadline(deadline) {
   return date.toLocaleDateString("en-US", options);
 }
 
-// Check if deadline is overdue
+// Check if deadline is overdue , returns true or false only 
+// if deadline has passed returns false , if deadline has not passed returns true
 function isOverdue(deadline) {
-  if (!deadline) return false;
   return new Date(deadline) < new Date();
 }
 
@@ -234,7 +245,7 @@ function isOverdue(deadline) {
 function createTaskHTML(task) {
   const deadlineClass =
     !task.completed && isOverdue(task.deadline) ? "overdue" : "";
-  const deadlineText = task.deadline ? formatDeadline(task.deadline) : "";
+  const deadlineText = formatDeadline(task.deadline);
 
   return `
                 <li class="task-item" data-id="${task.id}">
@@ -249,11 +260,7 @@ function createTaskHTML(task) {
                             }">
                                 ${categoryLabels[task.category]}
                             </span>
-                            ${
-                              deadlineText
-                                ? `<span class="task-deadline ${deadlineClass}">&#128197; ${deadlineText}</span>`
-                                : ""
-                            }
+                            <span class="task-deadline ${deadlineClass}">&#128197; ${deadlineText}</span>
                         </div>
                     </div>
                     <div class="task-actions">
@@ -277,7 +284,10 @@ function escapeHTML(text) {
 
 // Render Tasks
 function renderTasks() {
+  // will create a new arrays of object for all tasks that has false value for the completed key.
   const activeTasks = tasks.filter((t) => !t.completed);
+
+  // will create a new arrays of object for all tasks that has true value for the completed key.
   const completedTasks = tasks.filter((t) => t.completed);
 
   const activeList = document.getElementById("activeTasksList");
@@ -292,7 +302,10 @@ function renderTasks() {
     activeList.innerHTML =
       '<li class="empty-state">No active tasks. Add one above!</li>';
   } else {
-    activeList.innerHTML = activeTasks.map(createTaskHTML).join("");
+    activeList.innerHTML = "";
+    activeTasks.forEach((task) => {
+      activeList.innerHTML += createTaskHTML(task);
+    });
   }
 
   // Render completed tasks
@@ -300,16 +313,19 @@ function renderTasks() {
     completedList.innerHTML =
       '<li class="empty-state">No completed tasks yet.</li>';
   } else {
-    completedList.innerHTML = completedTasks.map(createTaskHTML).join("");
+    completedList.innerHTML = "";
+    completedTasks.forEach((task) => {
+      completedList.innerHTML += createTaskHTML(task);
+    });
   }
 }
 
-// Save tasks to localStorage
+// Save tasks to localStorage // Cache Memory of the browser
 function saveTasks() {
   localStorage.setItem("todoTasks", JSON.stringify(tasks));
 }
 
-// Load tasks from localStorage
+// Load tasks from localStorage //  Cacher Memory
 function loadTasks() {
   const saved = localStorage.getItem("todoTasks");
   if (saved) {
