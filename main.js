@@ -253,7 +253,7 @@ function createTaskHTML(task) {
                            ${task.completed ? "checked" : ""} 
                            onchange="toggleTask('${task.id}')" />
                     <div class="task-content">
-                        <div class="task-text">${escapeHTML(task.text)}</div>
+                        <div class="task-text">${task.text}</div>
                         <div class="task-meta">
                             <span class="task-category ${
                               categoryClasses[task.category]
@@ -273,13 +273,6 @@ function createTaskHTML(task) {
                     </div>
                 </li>
             `;
-}
-
-// Escape HTML to prevent XSS
-function escapeHTML(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
 }
 
 // Render Tasks
