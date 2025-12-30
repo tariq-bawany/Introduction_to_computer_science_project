@@ -275,7 +275,6 @@ function createTaskHTML(task) {
             `;
 }
 
-// Escape HTML to prevent XSS
 function escapeHTML(text) {
   const div = document.createElement("div");
   div.textContent = text;
