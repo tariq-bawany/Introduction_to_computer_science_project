@@ -31,12 +31,6 @@ body {
   font-weight: 600;
 }
 
-.header p {
-  color: #718096;
-  margin-top: 5px;
-  font-size: 0.95rem;
-}
-
 /* Input Section */
 .input-section {
   background: #ffffff;
